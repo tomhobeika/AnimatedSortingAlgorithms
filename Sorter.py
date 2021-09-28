@@ -3,7 +3,7 @@ import random
 import time
 
 W = 1000
-H = 800
+H = 900
 buffer = 20
 nums = []
 numElements = 100
@@ -12,7 +12,7 @@ window = tk.Tk()
 winSize = "{0}x{1}".format(str(W),str(H))
 rectangles = []
 buttons = []
-w = tk.Canvas(window, width=W, height=H - 200)
+w = tk.Canvas(window, width=W, height=H - 380)
 timeLabel = tk.Label(text="Real Time Taken: 0.0ms")
 timeLabel.place(height=100, anchor = 'center')
 timeLabel.pack(side = tk.TOP)
@@ -28,9 +28,20 @@ def setTimeLabel(totalTime):
 	window.update()
 
 def setNumElements():
-	numElements = numElementsInput
-	print(numElementsInput)
-	drawCanv()
+	numElementsInput = numElementsInputTemp.get()
+	try:
+		numElementsInt = int(numElementsInput)
+		global numElements
+		numElements = int(numElementsInput)
+		
+	except:
+		numElementsInputTemp.set("")
+		print("No int found")
+
+	print(numElements)
+	resetButton()
+	window.update()
+	
 
 
 def setBigO(bigOText):
@@ -132,14 +143,14 @@ def insertionSortNoGUI():
 	setTimeLabel(totalTime)
 	return array
 	
-
 # Quick Sort algorithm
 def quickSort():	
 	greyButtons()
 	setBigO("Θ(n log(n))")
 	list = nums
 	def sorter(items, low, high):
-		
+		drawCanv()
+		window.update()
 		if low < high:
 			split = partition(items, low, high)
 			sorter(items, low, split)
@@ -156,8 +167,6 @@ def partition(list,start,end):
 	pivot = list[(low + high) // 2]
 	
 	while True:
-		drawCanv()
-		window.update()
 		low = low + 1
 		while list[low] < pivot:
 			low = low + 1
@@ -173,15 +182,15 @@ def partition(list,start,end):
 
 def callMergeSort():
 	greyButtons()
+	setBigO("Θ(n log(n))")	 
 	x = nums
 	mergeSort(x)
 	normalButtons()
 
 # Merge Sort by Mayank Khanna	
 def mergeSort(arr):
-	setBigO("Θ(n log(n))")
 	drawCanv()
-	window.update()		  
+	window.update()
 	if len(arr) > 1:
 		# Finding the mid of the array
 		mid = len(arr)//2
@@ -191,7 +200,10 @@ def mergeSort(arr):
   
 		# into 2 halves
 		R = arr[mid:]
-  
+
+		arr = R
+		arr = arr + L
+		  
 		# Sorting the first half
 		mergeSort(L)
   
@@ -202,6 +214,8 @@ def mergeSort(arr):
   
 		# Copy data to temp arrays L[] and R[]
 		while i < len(L) and j < len(R):
+			drawCanv()
+			window.update()	
 			if L[i] < R[j]:
 				arr[k] = L[i]
 				i += 1
@@ -223,8 +237,11 @@ def mergeSort(arr):
 
 def createArr():
 	nums.clear()
+	print(numElements)
 	for x in range(numElements):
 		nums.append(random.randrange(1, 100))
+
+	print(nums)
 def clearCanv():
 	for x in rectangles:
 		w.delete(x)
@@ -281,15 +298,16 @@ insertionSortBtn = tk.Button(window, text = 'Insertion Sort', command = insertio
 insertionSortBtn.pack()
 
 # Merge Sort Button
-mergeSortBtn = tk.Button(window, text = 'Merge Sort', command = callMergeSort)
+mergeSortBtn = tk.Button(window, text = 'Merge Sort (Currently Broken)', command = callMergeSort)
 mergeSortBtn.pack()
 
 # Num Elements
 elementsLabel = tk.Label(text="Set Number Of Elements:")
+elementsLabel.pack()
+
 numElementsInputTemp=tk.StringVar()
 
 numElementsBox=tk.Entry(window, textvariable = numElementsInputTemp)
-numElementsInput = numElementsInputTemp.get()
 numElementsBox.pack()
 submitBtn = tk.Button(window, text = 'Submit', command = setNumElements)
 submitBtn.pack()
@@ -300,7 +318,7 @@ resetArrBtn = tk.Button(window, text = 'Reset List', command = resetButton)
 resetArrBtn.pack()
 
 
-buttons = [quickSortBtn, resetArrBtn, bubbleSortBtn, insertionSortBtn, bubbleSortSingleBtn, mergeSortBtn]
+buttons = [quickSortBtn, resetArrBtn, bubbleSortBtn, insertionSortBtn, bubbleSortSingleBtn, mergeSortBtn, submitBtn]
 window.geometry(winSize)
 window.mainloop()
 
