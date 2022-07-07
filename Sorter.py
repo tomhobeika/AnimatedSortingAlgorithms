@@ -115,13 +115,14 @@ def insertionSort():
 	greyButtons()
 	array = nums
 	for i in range(1, len(array)):
+		window.update()
 		key_item = array[i]
 		j = i - 1
 		while j >= 0 and array[j] > key_item:
 			array[j + 1] = array[j]
 			j -= 1
 		drawCanv()
-		window.update()
+		
 		array[j + 1] = key_item
 	normalButtons()
 	return array
@@ -150,8 +151,8 @@ def quickSort():
 	list = nums
 	def sorter(items, low, high):
 		drawCanv()
-		window.update()
 		if low < high:
+			window.update()
 			split = partition(items, low, high)
 			sorter(items, low, split)
 			sorter(items, split + 1, high)
@@ -266,12 +267,12 @@ def drawCanv():
 	for x in nums:
 		try:
 			wCalc = 1000/numElements
-
 			rect = w.create_rectangle(posX, 500, posX+wCalc, 50+nums[x]*2+250, fill='red')
 			rectangles.append(rect)
 			posX = posX + (W - buffer - buffer)/len(nums)
 			w.pack()
 		except:
+			print("Draw Fail")
 			continue
 
 
